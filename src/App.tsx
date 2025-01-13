@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { fetchArtistDetails, requestAccessToken } from './api';
+import Header from './components/Header';
 
 function App() {
   const [accessToken, setAccessToken] = useState('');
@@ -17,14 +18,21 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <h1>Spotify Playlist Organizer</h1>
-      <button onClick={handleRequestToken}>Request Access Token</button>
-      <p>Access Token: {accessToken}</p>
-      <button onClick={handlefetchArtist}>Fetch Artist Details</button>
-      <p>Artist Detail: {artistDetails}</p>
-      <a href="">test</a>
-    </div>
+    <>
+      <Header />
+      <div className="flex flex-col gap-4">
+        <h1>Spotify Playlist Organizer</h1>
+        <button className="btn" onClick={handleRequestToken}>
+          Request Access Token
+        </button>
+        <p>Access Token: {accessToken}</p>
+        <button className="btn" onClick={handlefetchArtist}>
+          Fetch Artist Details
+        </button>
+        <p>Artist Detail: {artistDetails}</p>
+        <a href="">test</a>
+      </div>
+    </>
   );
 }
 

@@ -2,38 +2,4 @@
 @tailwind components;
 @tailwind utilities;
 @layer utilities {
-  .bg-background-dark {
-    @apply bg-gray-900;
-  }
-  .bg-background-light {
-    @apply bg-white;
-  }
-  .text-text-dark {
-    color: rgba(255, 255, 255, 0.87);
-  }
-  .text-text-light {
-    color: #213547;
-  }
-  .bg-button-dark {
-    @apply bg-gray-800;
-  }
-  .bg-button-light {
-    @apply bg-gray-100;
-  }
-}
-body {
-  @apply flex items-center justify-center min-w-[320px] min-h-screen bg-background-dark text-text-dark dark:bg-background-dark dark:text-text-dark;
-}
-a {
-  @apply font-medium text-primary hover:text-primary-hover underline;
-}
-h1 {
-  @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
-}
-button {
-  @apply rounded-lg border border-transparent px-4 py-2 text-base font-medium bg-button-dark text-white transition duration-300 ease-in-out hover:border-primary focus:outline-none focus:ring focus:ring-primary;
-}
-
-#root {
-  @apply max-w-[1280px] mx-0 my-auto p-8 text-center;
 }
