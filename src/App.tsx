@@ -1,39 +1,14 @@
-import { useState } from 'react';
-import { fetchArtistDetails, requestAccessToken } from './api';
-import Header from './components/Header';
+import { BrowserRouter, Route, Routes } from 'react-router';
+import RootPage from './pages/RootPage';
+import AuthSpotifyCallback from './pages/AuthSpotifyCallback';
 
-function App() {
-  const [accessToken, setAccessToken] = useState('');
-
-  const handleRequestToken = async () => {
-    const response = await requestAccessToken();
-    setAccessToken(response.access_token);
-  };
-
-  const [artistDetails, setArtistDetails] = useState('');
-
-  const handlefetchArtist = async () => {
-    const response = await fetchArtistDetails('4Z8W4fKeB5YxbusRsdQVPb', accessToken);
-    setArtistDetails(JSON.stringify(response));
-  };
-
+export default function App() {
   return (
-    <>
-      <Header />
-      <div className="flex flex-col gap-4">
-        <h1>Spotify Playlist Organizer</h1>
-        <button className="btn" onClick={handleRequestToken}>
-          Request Access Token
-        </button>
-        <p>Access Token: {accessToken}</p>
-        <button className="btn" onClick={handlefetchArtist}>
-          Fetch Artist Details
-        </button>
-        <p>Artist Detail: {artistDetails}</p>
-        <a href="">test</a>
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<RootPage />} />
+        <Route path="/auth/spotify/callback" element={<AuthSpotifyCallback />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
