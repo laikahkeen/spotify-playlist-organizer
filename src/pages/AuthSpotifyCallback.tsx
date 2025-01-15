@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router';
-import { getAccessToken } from '../api';
-import { useAuthStore } from '../zustand/authStore';
+import { getAccessToken } from '@/api';
+import { useAuthStore } from '@/zustand/authStore';
+import { Button } from '@/components/ui/button';
 
 export default function AuthSpotifyCallback() {
   const clientId = 'ea805dc29a43402580309e9b53e180b4';
@@ -15,12 +16,10 @@ export default function AuthSpotifyCallback() {
   };
   return (
     <>
-      <button className="btn" onClick={handleRequestToken}>
-        get access token with code
-      </button>
+      <Button onClick={handleRequestToken}>get access token with code</Button>
       <p>Access Token: {accessToken}</p>
-      <NavLink className="btn" to="/">
-        return to home page
+      <NavLink to="/">
+        <Button>return to home page</Button>
       </NavLink>
     </>
   );

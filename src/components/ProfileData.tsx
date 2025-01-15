@@ -1,5 +1,6 @@
-import { fetchProfile, redirectToAuthCodeFlow, UserProfile } from '../api';
-import { useAuthStore } from '../zustand/authStore';
+import { fetchProfile, redirectToAuthCodeFlow, UserProfile } from '@/api';
+import { useAuthStore } from '@/zustand/authStore';
+import { Button } from '@/components/ui/button';
 
 function populateUI(profile: UserProfile) {
   document.getElementById('displayName')!.innerText = profile.display_name;
@@ -33,9 +34,7 @@ export default function ProfileData() {
     <div>
       <h1>Display your Spotify profile data</h1>
       <p>access token: {accessToken}</p>
-      <button className="btn" onClick={handleFetchProfile}>
-        handle fetch profile
-      </button>
+      <Button onClick={handleFetchProfile}>handle fetch profile</Button>
       <section id="profile">
         <h2>
           Logged in as <span id="displayName"></span>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { fetchArtistDetails, requestAccessToken } from '../api';
-import { useAuthStore } from '../zustand/authStore';
+import { fetchArtistDetails, requestAccessToken } from '@/api';
+import { useAuthStore } from '@/zustand/authStore';
+import { Button } from '@/components/ui/button';
 
 export default function AuthPoc() {
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -20,15 +21,11 @@ export default function AuthPoc() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-4">
-        <button className="btn" onClick={handleRequestToken}>
-          Request Access Token
-        </button>
-        <p className="">Access Token: {accessToken}</p>
+        <Button onClick={handleRequestToken}>Request Access Token</Button>
+        <p>Access Token: {accessToken}</p>
       </div>
       <div className="flex items-center gap-4">
-        <button className="btn" onClick={handlefetchArtist}>
-          Fetch Artist Details
-        </button>
+        <Button onClick={handlefetchArtist}>Fetch Artist Details</Button>
         <p>Artist Detail: {artistDetails}</p>
       </div>
     </div>

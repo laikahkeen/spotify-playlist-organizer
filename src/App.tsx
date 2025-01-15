@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
-import RootPage from './pages/RootPage';
-import AuthSpotifyCallback from './pages/AuthSpotifyCallback';
+import RootPage from '@/pages/RootPage';
+import AuthSpotifyCallback from '@/pages/AuthSpotifyCallback';
 
 export default function App() {
   return (
