@@ -1,6 +1,7 @@
-import { fetchProfile, redirectToAuthCodeFlow, UserProfile } from '@/api';
-import { useAuthStore } from '@/zustand/authStore';
+import spotifyAccountApi from '@/api/spotifyAccountApi';
+import spotifyApi from '@/api/spotifyApi';
 import { Button } from '@/components/ui/button';
+import { UserProfile } from '@/interfaces/spotify';
 
 function populateUI(profile: UserProfile) {
   document.getElementById('displayName')!.innerText = profile.display_name;
@@ -19,21 +20,19 @@ function populateUI(profile: UserProfile) {
 }
 
 export default function ProfileData() {
-  const clientId = 'ea805dc29a43402580309e9b53e180b4';
-  const accessToken = useAuthStore((state) => state.accessToken);
+  const { data: profile, isError } = spotifyApi.useGetProfile();
   async function handleFetchProfile() {
-    if (!accessToken) {
-      redirectToAuthCodeFlow(clientId);
-    } else {
-      const profile = await fetchProfile(accessToken);
+    if (profile) {
       populateUI(profile);
+    } else {
+      spotifyAccountApi.redirectToAuthCodeFlow();
     }
   }
 
   return (
     <div>
       <h1>Display your Spotify profile data</h1>
-      <p>access token: {accessToken}</p>
+      {isError && <h1>generate token first</h1>}
       <Button onClick={handleFetchProfile}>handle fetch profile</Button>
       <section id="profile">
         <h2>

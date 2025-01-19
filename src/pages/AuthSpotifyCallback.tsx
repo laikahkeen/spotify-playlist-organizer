@@ -1,26 +1,27 @@
 import { NavLink } from 'react-router';
-import { getAccessToken } from '@/api';
-import { useAuthStore } from '@/zustand/authStore';
 import { Button } from '@/components/ui/button';
+import spotifyAccountApi from '@/api/spotifyAccountApi';
+import { useEffect } from 'react';
+import { useSpotifyAccountStore } from '@/stores/spotifyAccountStore';
 
 export default function AuthSpotifyCallback() {
-  const clientId = 'ea805dc29a43402580309e9b53e180b4';
-  const params = new URLSearchParams(window.location.search);
-  const code = params.get('code') || '';
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code') || '';
+    spotifyAccountApi.getPrivateAccessToken(code);
+  }, []);
 
-  const handleRequestToken = async () => {
-    const response = await getAccessToken(clientId, code);
-    setAccessToken(response);
-  };
+  const privateAccessToken = useSpotifyAccountStore((state) => state.privateAccessToken);
   return (
     <>
-      <Button onClick={handleRequestToken}>get access token with code</Button>
-      <p>Access Token: {accessToken}</p>
-      <NavLink to="/">
-        <Button>return to home page</Button>
-      </NavLink>
+      {privateAccessToken ? (
+        <>
+          <p>Access Token: {privateAccessToken.access_token}</p>
+          <NavLink to="/">
+            <Button>return to home page</Button>
+          </NavLink>
+        </>
+      ) : null}
     </>
   );
 }
