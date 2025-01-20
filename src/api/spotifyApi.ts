@@ -13,7 +13,7 @@ const { request: spotifyApiRequest, axiosInstance: spotifyClient } = createApiRe
 spotifyClient.interceptors.request.use(
   (config) => {
     const { privateAccessToken } = useSpotifyAccountStore.getState();
-    if (!privateAccessToken || !privateAccessToken.access_token) {
+    if (!privateAccessToken.access_token) {
       return Promise.reject(new Error('No access token available.'));
     }
     config.headers.Authorization = `Bearer ${privateAccessToken.access_token}`;
@@ -39,6 +39,7 @@ spotifyClient.interceptors.response.use(
             await spotifyAccountApi.refreshToken();
             return null;
           } catch (refreshError) {
+            useSpotifyAccountStore.getState().clearPrivateAccessToken();
             return Promise.reject(refreshError);
           } finally {
             isRefreshing = false;
@@ -74,11 +75,14 @@ const getProfile = async (): Promise<UserProfile> => {
 };
 
 const spotifyApi = {
-  useGetProfile: () =>
-    useQuery({
+  useGetProfile: () => {
+    const accessToken = useSpotifyAccountStore((state) => state.privateAccessToken.access_token);
+    return useQuery({
       queryKey: ['spotify', 'me'],
       queryFn: () => getProfile(),
-    }),
+      enabled: !!accessToken,
+    });
+  },
 };
 
 export default spotifyApi;

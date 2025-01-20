@@ -6,6 +6,7 @@ import { useSpotifyAccountStore } from '@/stores/spotifyAccountStore';
 const APP_BASE_URL = window.location.origin;
 const client_id: string = import.meta.env.VITE_SPOTIFY_API_CLIENT_ID;
 const client_secret: string = import.meta.env.VITE_SPOTIFY_API_CLIENT_SECRET;
+const redirect_uri = `${APP_BASE_URL}/auth/spotify/callback`;
 
 const spotifyAccountBaseUrl = 'https://accounts.spotify.com';
 const { request: spotifyAccountApiRequest } = createApiRequest({
@@ -43,7 +44,7 @@ const redirectToAuthCodeFlow = async () => {
   localStorage.setItem('verifier', verifier);
 
   const params = new URLSearchParams({
-    redirect_uri: `${APP_BASE_URL}/auth/spotify/callback`,
+    redirect_uri,
     scope: 'user-read-private user-read-email',
     response_type: 'code',
     client_id,
@@ -59,7 +60,7 @@ const getPrivateAccessToken = async (code: string): Promise<PrivateAccessTokenRe
 
   const data = new URLSearchParams({
     grant_type: 'authorization_code',
-    redirect_uri: `${APP_BASE_URL}/auth/spotify/callback`,
+    redirect_uri,
     client_id,
     code,
     code_verifier,
@@ -76,18 +77,18 @@ const getPrivateAccessToken = async (code: string): Promise<PrivateAccessTokenRe
 };
 
 const refreshToken = async (): Promise<PrivateAccessTokenResponse> => {
-  const refreshToken = useSpotifyAccountStore.getState().privateAccessToken.refresh_token;
+  const refresh_token = useSpotifyAccountStore.getState().privateAccessToken.refresh_token;
 
-  const params = new URLSearchParams({
+  const data = new URLSearchParams({
     client_id,
     grant_type: 'refresh_token',
-    refreshToken,
+    refresh_token,
   });
 
   const response: PrivateAccessTokenResponse = await spotifyAccountApiRequest({
     url: spotifyAccountUrl.getAccessToken(),
     method: AxiosMethod.POST,
-    params,
+    data,
   });
 
   useSpotifyAccountStore.getState().setPrivateAccessToken(response);

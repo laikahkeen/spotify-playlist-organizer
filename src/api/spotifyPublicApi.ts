@@ -12,7 +12,7 @@ const { request: spotifyPublicApiRequest, axiosInstance: spotifyPublicClient } =
 
 spotifyPublicClient.interceptors.request.use(
   async (config) => {
-    let publicAccessToken = useSpotifyAccountStore.getState().publicAccessToken;
+    let { publicAccessToken } = useSpotifyAccountStore.getState();
     if (!publicAccessToken.access_token) {
       publicAccessToken = await spotifyAccountApi.getPublicAccessToken();
     }
