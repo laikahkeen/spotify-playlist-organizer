@@ -16,7 +16,7 @@ import spotifyApi from '@/api/spotifyApi';
 import { useSpotifyAccountStore } from '@/stores/spotifyAccountStore';
 
 export default function NavBar() {
-  const { data: profile } = spotifyApi.useGetProfile();
+  const { data: profile } = spotifyApi.useGetMyProfile();
   const clearPrivateAccessToken = useSpotifyAccountStore((state) => state.clearPrivateAccessToken);
   return (
     <div className="navbar border-b">

@@ -1,6 +1,6 @@
 import { AxiosMethod, createApiRequest } from '@/api/axios';
 import spotifyAccountApi from '@/api/spotifyAccountApi';
-import { UserProfile } from '@/interfaces/spotify';
+import { Playlist, Response, TrackRecord, UserProfile } from '@/interfaces/spotify';
 import { useSpotifyAccountStore } from '@/stores/spotifyAccountStore';
 import { useQuery } from '@tanstack/react-query';
 
@@ -65,21 +65,53 @@ spotifyClient.interceptors.response.use(
 
 const spotifyUrl = {
   getMyProfile: () => '/me',
+  getMyPlaylists: () => '/me/playlists',
+  getPlaylistTracks: (playlistId: string) => `/playlists/${playlistId}/tracks`,
 };
 
-const getProfile = async (): Promise<UserProfile> => {
+const getMyProfile = async (): Promise<UserProfile> => {
   return await spotifyApiRequest({
     url: spotifyUrl.getMyProfile(),
     method: AxiosMethod.GET,
   });
 };
 
+const getMyPlaylists = async (): Promise<Response<Playlist>> => {
+  return await spotifyApiRequest({
+    url: spotifyUrl.getMyPlaylists(),
+    method: AxiosMethod.GET,
+  });
+};
+
+const getPlaylistTracks = async (playlistId: string): Promise<Response<TrackRecord>> => {
+  return await spotifyApiRequest({
+    url: spotifyUrl.getPlaylistTracks(playlistId),
+    method: AxiosMethod.GET,
+  });
+};
+
 const spotifyApi = {
-  useGetProfile: () => {
+  useGetMyProfile: () => {
     const accessToken = useSpotifyAccountStore((state) => state.privateAccessToken.access_token);
     return useQuery({
       queryKey: ['spotify', 'me'],
-      queryFn: () => getProfile(),
+      queryFn: () => getMyProfile(),
+      enabled: !!accessToken,
+    });
+  },
+  useGetMyPlaylists: () => {
+    const accessToken = useSpotifyAccountStore((state) => state.privateAccessToken.access_token);
+    return useQuery({
+      queryKey: ['spotify', 'me', 'playlist'],
+      queryFn: () => getMyPlaylists(),
+      enabled: !!accessToken,
+    });
+  },
+  useGetPlaylistTracks: (playlistId: string) => {
+    const accessToken = useSpotifyAccountStore((state) => state.privateAccessToken.access_token);
+    return useQuery({
+      queryKey: ['spotify', 'playlist', playlistId, 'tracks'],
+      queryFn: () => getPlaylistTracks(playlistId),
       enabled: !!accessToken,
     });
   },
