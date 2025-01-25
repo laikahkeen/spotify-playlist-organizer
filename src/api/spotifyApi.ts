@@ -1,8 +1,9 @@
 import { AxiosMethod, createApiRequest } from '@/api/axios';
+import { queryClient } from '@/api/queryClient';
 import spotifyAccountApi from '@/api/spotifyAccountApi';
-import { Playlist, Response, TrackRecord, UserProfile } from '@/interfaces/spotify';
+import { Playlist, PlaylistForm, Response, TrackRecord, UserProfile } from '@/interfaces/spotify';
 import { useSpotifyAccountStore } from '@/stores/spotifyAccountStore';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 const spotifyBaseUrl = 'https://api.spotify.com/v1';
 
@@ -67,6 +68,7 @@ const spotifyUrl = {
   getMyProfile: () => '/me',
   getMyPlaylists: () => '/me/playlists',
   getPlaylistTracks: (playlistId: string) => `/playlists/${playlistId}/tracks`,
+  createPlaylist: (userId: string) => `/users/${userId}/playlists`,
 };
 
 const getMyProfile = async (): Promise<UserProfile> => {
@@ -80,6 +82,14 @@ const getMyPlaylists = async (): Promise<Response<Playlist>> => {
   return await spotifyApiRequest({
     url: spotifyUrl.getMyPlaylists(),
     method: AxiosMethod.GET,
+  });
+};
+
+const createPlaylist = async (userId: string, data: PlaylistForm): Promise<Playlist> => {
+  return await spotifyApiRequest({
+    url: spotifyUrl.createPlaylist(userId),
+    method: AxiosMethod.POST,
+    data,
   });
 };
 
@@ -105,6 +115,12 @@ const spotifyApi = {
       queryKey: ['spotify', 'me', 'playlist'],
       queryFn: () => getMyPlaylists(),
       enabled: !!accessToken,
+    });
+  },
+  useCreatePlaylist: () => {
+    return useMutation({
+      mutationFn: ({ userId, data }: { userId: string; data: PlaylistForm }) => createPlaylist(userId, data),
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ['spotify', 'me', 'playlist'] }),
     });
   },
   useGetPlaylistTracks: (playlistId: string) => {

@@ -3,37 +3,42 @@ import { PrivateAccessTokenResponse, PublicAccessTokenResponse } from '@/interfa
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface AuthStore {
+interface SpotifyAccountStoreState {
   publicAccessToken: PublicAccessTokenResponse;
   privateAccessToken: PrivateAccessTokenResponse;
-  setPublicAccessToken: (token: PublicAccessTokenResponse) => void;
-  setPrivateAccessToken: (token: PrivateAccessTokenResponse) => void;
-  clearPrivateAccessToken: () => Promise<void>;
 }
 
-const initialPublicAccessTokenState = {
-  access_token: '',
-  token_type: '',
-  expires_in: 0,
+interface SpotifyAccountStoreAction {
+  setPublicAccessToken: (token: PublicAccessTokenResponse) => void;
+  setPrivateAccessToken: (token: PrivateAccessTokenResponse) => void;
+  clearPrivateAccessToken: () => void;
+}
+
+type SpotifyAccountStore = SpotifyAccountStoreState & SpotifyAccountStoreAction;
+
+const initialState: SpotifyAccountStoreState = {
+  publicAccessToken: {
+    access_token: '',
+    token_type: '',
+    expires_in: 0,
+  },
+  privateAccessToken: {
+    access_token: '',
+    token_type: '',
+    expires_in: 0,
+    refresh_token: '',
+    scope: '',
+  },
 };
 
-const initialPrivateAccessTokenState = {
-  access_token: '',
-  token_type: '',
-  expires_in: 0,
-  refresh_token: '',
-  scope: '',
-};
-
-export const useSpotifyAccountStore = create<AuthStore>()(
+export const useSpotifyAccountStore = create<SpotifyAccountStore>()(
   persist(
     (set) => ({
-      publicAccessToken: initialPublicAccessTokenState,
-      privateAccessToken: initialPrivateAccessTokenState,
+      ...initialState,
       setPublicAccessToken: (token) => set({ publicAccessToken: token }),
       setPrivateAccessToken: (token) => set({ privateAccessToken: token }),
-      clearPrivateAccessToken: async () => {
-        await set({ privateAccessToken: initialPrivateAccessTokenState });
+      clearPrivateAccessToken: () => {
+        set({ privateAccessToken: initialState.privateAccessToken });
         queryClient.resetQueries();
       },
     }),

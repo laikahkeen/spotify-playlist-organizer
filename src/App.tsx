@@ -4,7 +4,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { queryClient } from '@/api/queryClient';
 import Layout from '@/pages/Layout';
-import Home from '@/pages/home';
+import Home from '@/pages/Home';
 
 export default function App() {
   return (

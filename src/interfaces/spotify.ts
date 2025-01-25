@@ -42,6 +42,12 @@ export interface Playlist {
   uri: string;
 }
 
+export interface PlaylistForm {
+  name: string;
+  description: string;
+  public: boolean;
+}
+
 export interface Owner {
   display_name: string;
   external_urls: ExternalUrls;
