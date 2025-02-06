@@ -1,17 +1,18 @@
-import spotifyApi from '@/api/spotifyApi';
+import TracklistCard from '@/components/TracklistCard';
+
 import { useSpotifyStore } from '@/stores/spotifyStore';
 
 export default function TracklistSection() {
-  const selectedPlaylist = useSpotifyStore((state) => state.selectedPlaylist);
-  const { data: tracks } = spotifyApi.useGetPlaylistTracks(selectedPlaylist.id);
+  const selectedPlaylists = useSpotifyStore((state) => state.selectedPlaylists);
 
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="text-xl font-semibold">Tracklist</h1>
-      {tracks &&
-        tracks.items.map((trackRecord) => {
-          return <div key={trackRecord.track.id}>{trackRecord.track.name}</div>;
-        })}
+      <h1 className="text-xl font-semibold">My Tracklists</h1>
+
+      <div className="grid grid-cols-3 gap-2">
+        {selectedPlaylists &&
+          selectedPlaylists.map((playlist) => <TracklistCard key={playlist.id} playlist={playlist} />)}
+      </div>
     </div>
   );
 }

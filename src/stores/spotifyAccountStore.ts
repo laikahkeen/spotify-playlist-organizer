@@ -43,7 +43,7 @@ export const useSpotifyAccountStore = create<SpotifyAccountStore>()(
       },
     }),
     {
-      name: 'access-tokens',
+      name: 'accessTokens',
     }
   )
 );

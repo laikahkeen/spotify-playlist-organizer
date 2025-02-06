@@ -10,10 +10,9 @@ export default function Home() {
         <div className="border p-4">
           <PlaylistSection />
         </div>
-        <div className="border p-4">
+        <div className="col-span-2 border p-4">
           <TracklistSection />
         </div>
-        <div className="border p-4"></div>
       </div>
     </>
   );

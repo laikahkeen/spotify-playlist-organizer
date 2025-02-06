@@ -3,29 +3,41 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface SpotifyStoreState {
-  selectedPlaylist: Playlist;
+  selectedPlaylists: Playlist[];
 }
 
 interface SpotifyStoreAction {
-  setSelectedPlaylist: (playlist: Playlist) => void;
+  toggleSelectedPlaylists: (playlist: Playlist) => void;
+  resetSelectedPlaylists: () => void;
 }
 
 type SpotifyStore = SpotifyStoreState & SpotifyStoreAction;
 
 const initialState: SpotifyStoreState = {
-  selectedPlaylist: {
-    id: '',
-  } as Playlist,
+  selectedPlaylists: [],
 };
 
 export const useSpotifyStore = create<SpotifyStore>()(
   persist(
     (set) => ({
       ...initialState,
-      setSelectedPlaylist: (playlist) => set({ selectedPlaylist: playlist }),
+      toggleSelectedPlaylists: (playlist) =>
+        set((state) => {
+          const exists = state.selectedPlaylists.some((p) => p.id === playlist.id);
+          return {
+            selectedPlaylists: exists
+              ? state.selectedPlaylists.filter((p) => p.id !== playlist.id)
+              : [...state.selectedPlaylists, playlist],
+          };
+        }),
+
+      resetSelectedPlaylists: () =>
+        set(() => ({
+          selectedPlaylists: [],
+        })),
     }),
     {
-      name: 'access-tokens',
+      name: 'selectedPlaylists',
     }
   )
 );

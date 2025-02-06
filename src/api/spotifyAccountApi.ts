@@ -45,7 +45,8 @@ const redirectToAuthCodeFlow = async () => {
 
   const params = new URLSearchParams({
     redirect_uri,
-    scope: 'user-read-private user-read-email playlist-modify-private playlist-modify-public playlist-read-private',
+    scope:
+      'user-read-private user-read-email playlist-modify-private playlist-modify-public playlist-read-private playlist-modify-private',
     response_type: 'code',
     client_id,
     code_challenge_method: 'S256',
